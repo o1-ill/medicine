@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقسيم طلاب المرحلة الرابعة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, get, push, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvpWfW2Ad5_qX8v1pljUoV6XLaKIdCFes",
+            authDomain: "medicine-45d43.firebaseapp.com",
+            databaseURL: "https://medicine-45d43-default-rtdb.firebaseio.com",
+            projectId: "medicine-45d43",
+            storageBucket: "medicine-45d43.firebasestorage.app",
+            messagingSenderId: "786355225379",
+            appId: "1:786355225379:web:d2abd227b",
+            measurementId: "G-X4XPTTJSFE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        // Make Firebase functions available globally
+        window.firebaseDB = {
+            database,
+            ref,
+            set,
+            get,
+            push,
+            remove,
+            onValue
+        };
+    </script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px #fbbf24; }
+            50% { box-shadow: 0 0 20px #fbbf24, 0 0 30px #fbbf24; }
+        }
+        
+        .glow-animation {
+            animation: glow 3s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .success-animation {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        .fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans">
+    <!-- Success Message -->
+    <div id="successMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 hidden">
+        <div class="bg-green-500 text-white px-8 py-4 rounded-lg shadow-lg success-animation">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">✅</span>
+                <span class="text-lg font-bold">تم التسجيل بنجاح!</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">تقسيم طلاب المرحلة الرابعة</h1>
+            <div class="w-24 h-1 bg-blue-500 mx-auto rounded"></div>
+        </div>
+
+        <!-- Groups Table -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">حالة المجاميع</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Medicine 1 -->
+                <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4">
+                    <h3 class="text-xl font-bold text-blue-800 mb-4 text-center">Medicine 1</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 1" data-subgroup="1">
+                            <span class="font-medium">Subgroup 1</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 1" data-subgroup="2">
+                            <span class="font-medium">Subgroup 2</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 1" data-subgroup="3">
+                            <span class="font-medium">Subgroup 3</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 1" data-subgroup="4">
+                            <span class="font-medium">Subgroup 4</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 1" data-subgroup="5">
+                            <span class="font-medium">Subgroup 5</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medicine 2 -->
+                <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4">
+                    <h3 class="text-xl font-bold text-green-800 mb-4 text-center">Medicine 2</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 2" data-subgroup="1">
+                            <span class="font-medium">Subgroup 1</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 2" data-subgroup="2">
+                            <span class="font-medium">Subgroup 2</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 2" data-subgroup="3">
+                            <span class="font-medium">Subgroup 3</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 2" data-subgroup="4">
+                            <span class="font-medium">Subgroup 4</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm" data-group="Medicine 2" data-subgroup="5">
+                            <span class="font-medium">Subgroup 5</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-600 count">0/10</span>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">تسجيل طالب جديد</h2>
+            
+            <form id="registrationForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الثلاثي</label>
+                    <input type="text" id="studentName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الرمز السري (اختياري)</label>
+                    <input type="password" id="studentPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Group</label>
+                    <select id="studentGroup" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">اختر المجموعة</option>
+                        <option value="Medicine 1">Medicine 1</option>
+                        <option value="Medicine 2">Medicine 2</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Subgroup</label>
+                    <select id="studentSubgroup" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">اختر المجموعة الفرعية</option>
+                        <option value="1">Subgroup 1</option>
+                        <option value="2">Subgroup 2</option>
+                        <option value="3">Subgroup 3</option>
+                        <option value="4">Subgroup 4</option>
+                        <option value="5">Subgroup 5</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                    تسجيل الطالب
+                </button>
+            </form>
+        </div>
+
+        <!-- Admin Panel -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">لوحة الإدارة</h2>
+            
+            <div id="adminLogin" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الرمز السري للإدارة</label>
+                    <input type="password" id="adminPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <button onclick="checkAdminPassword()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                    دخول الإدارة
+                </button>
+            </div>
+            
+            <div id="adminPanel" class="hidden space-y-4">
+                <div class="flex space-x-4">
+                    <button onclick="exportData()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                        تصدير البيانات (Excel)
+                    </button>
+                    <label class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-pointer text-center">
+                        استيراد البيانات
+                        <input type="file" id="importFile" accept=".xlsx,.xls" class="hidden" onchange="importData(event)">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students List -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">قائمة الطلاب</h2>
+            
+            <div id="studentsList" class="space-y-4">
+                <!-- Students will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-96 mx-4">
+            <h3 class="text-lg font-bold mb-4">تعديل بيانات الطالب</h3>
+            
+            <div id="passwordPrompt" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">أدخل الرمز السري</label>
+                    <input type="password" id="editPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="checkEditPassword()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                        تأكيد
+                    </button>
+                    <button onclick="closeEditModal()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                        إلغاء
+                    </button>
+                </div>
+            </div>
+            
+            <div id="editForm" class="hidden space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الثلاثي</label>
+                    <input type="text" id="editName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Group</label>
+                    <select id="editGroup" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="Medicine 1">Medicine 1</option>
+                        <option value="Medicine 2">Medicine 2</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Subgroup</label>
+                    <select id="editSubgroup" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="1">Subgroup 1</option>
+                        <option value="2">Subgroup 2</option>
+                        <option value="3">Subgroup 3</option>
+                        <option value="4">Subgroup 4</option>
+                        <option value="5">Subgroup 5</option>
+                    </select>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="saveEdit()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                        حفظ
+                    </button>
+                    <button onclick="deleteStudent()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                        حذف
+                    </button>
+                    <button onclick="closeEditModal()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                        إلغاء
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let students = [];
+        let isAdmin = false;
+        let currentEditIndex = -1;
+        let studentsKeys = {}; // To store Firebase keys
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for Firebase to be ready
+            setTimeout(() => {
+                if (window.firebaseDB) {
+                    loadStudentsFromFirebase();
+                } else {
+                    console.error('Firebase not loaded');
+                }
+            }, 1000);
+        });
+
+        // Load students from Firebase
+        function loadStudentsFromFirebase() {
+            const studentsRef = window.firebaseDB.ref(window.firebaseDB.database, 'students');
+            
+            window.firebaseDB.onValue(studentsRef, (snapshot) => {
+                const data = snapshot.val();
+                students = [];
+                studentsKeys = {};
+                
+                if (data) {
+                    Object.keys(data).forEach((key, index) => {
+                        students.push({
+                            ...data[key],
+                            index: index
+                        });
+                        studentsKeys[index] = key;
+                    });
+                }
+                
+                updateGroupsDisplay();
+                displayStudents();
+            });
+        }
+
+        // Save student to Firebase
+        function saveStudentToFirebase(student) {
+            const studentsRef = window.firebaseDB.ref(window.firebaseDB.database, 'students');
+            const newStudentRef = window.firebaseDB.push(studentsRef);
+            return window.firebaseDB.set(newStudentRef, student);
+        }
+
+        // Update student in Firebase
+        function updateStudentInFirebase(index, updatedStudent) {
+            const key = studentsKeys[index];
+            if (key) {
+                const studentRef = window.firebaseDB.ref(window.firebaseDB.database, `students/${key}`);
+                return window.firebaseDB.set(studentRef, updatedStudent);
+            }
+        }
+
+        // Delete student from Firebase
+        function deleteStudentFromFirebase(index) {
+            const key = studentsKeys[index];
+            if (key) {
+                const studentRef = window.firebaseDB.ref(window.firebaseDB.database, `students/${key}`);
+                return window.firebaseDB.remove(studentRef);
+            }
+        }
+
+        // Registration form handler
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('studentName').value.trim();
+            const password = document.getElementById('studentPassword').value;
+            const group = document.getElementById('studentGroup').value;
+            const subgroup = document.getElementById('studentSubgroup').value;
+            
+            if (!name || !group || !subgroup) {
+                alert('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            // Check if subgroup is full
+            const currentCount = students.filter(s => s.group === group && s.subgroup === subgroup).length;
+            if (currentCount >= 10) {
+                alert('هذه المجموعة الفرعية ممتلئة');
+                return;
+            }
+            
+            // Add student
+            const student = {
+                name: name,
+                password: password,
+                group: group,
+                subgroup: subgroup,
+                timestamp: Date.now()
+            };
+            
+            // Save to Firebase
+            saveStudentToFirebase(student).then(() => {
+                // Show success animation
+                showSuccessMessage();
+                
+                // Highlight the student's group with glow effect
+                const groupElement = document.querySelector(`[data-group="${group}"][data-subgroup="${subgroup}"]`);
+                if (groupElement) {
+                    groupElement.classList.add('glow-animation');
+                    setTimeout(() => {
+                        groupElement.classList.remove('glow-animation');
+                    }, 3000);
+                }
+                
+                // Reset form
+                this.reset();
+            }).catch((error) => {
+                console.error('Error saving student:', error);
+                alert('حدث خطأ في حفظ البيانات');
+            });
+        });
+
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.classList.remove('hidden');
+            message.classList.add('flex');
+            
+            setTimeout(() => {
+                message.classList.add('fade-out');
+                setTimeout(() => {
+                    message.classList.add('hidden');
+                    message.classList.remove('flex', 'fade-out');
+                }, 500);
+            }, 2500);
+        }
+
+        function updateGroupsDisplay() {
+            const groupElements = document.querySelectorAll('[data-group][data-subgroup]');
+            
+            groupElements.forEach(element => {
+                const group = element.getAttribute('data-group');
+                const subgroup = element.getAttribute('data-subgroup');
+                
+                const count = students.filter(s => s.group === group && s.subgroup === subgroup).length;
+                const countElement = element.querySelector('.count');
+                const statusDot = element.querySelector('.status-dot');
+                
+                countElement.textContent = `${count}/10`;
+                
+                if (count === 0) {
+                    statusDot.className = 'w-3 h-3 rounded-full bg-green-500 status-dot';
+                } else if (count === 10) {
+                    statusDot.className = 'w-3 h-3 rounded-full bg-red-500 status-dot';
+                } else {
+                    statusDot.className = 'w-3 h-3 rounded-full bg-yellow-500 status-dot';
+                }
+            });
+        }
+
+        function displayStudents() {
+            const container = document.getElementById('studentsList');
+            container.innerHTML = '';
+            
+            if (students.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500">لا توجد طلاب مسجلين</p>';
+                return;
+            }
+            
+            // Group students by group and subgroup
+            const groupedStudents = {};
+            students.forEach((student, index) => {
+                const key = `${student.group} - Subgroup ${student.subgroup}`;
+                if (!groupedStudents[key]) {
+                    groupedStudents[key] = [];
+                }
+                groupedStudents[key].push({...student, index});
+            });
+            
+            Object.keys(groupedStudents).forEach(groupKey => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'mb-6';
+                
+                const groupTitle = document.createElement('h3');
+                groupTitle.className = 'text-lg font-bold text-gray-800 mb-3 bg-gray-100 p-2 rounded';
+                groupTitle.textContent = groupKey;
+                groupDiv.appendChild(groupTitle);
+                
+                const studentsDiv = document.createElement('div');
+                studentsDiv.className = 'space-y-2';
+                
+                groupedStudents[groupKey].forEach(student => {
+                    const studentDiv = document.createElement('div');
+                    studentDiv.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg';
+                    studentDiv.innerHTML = `
+                        <span class="flex items-center space-x-2">
+                            <span>👤</span>
+                            <span class="font-medium">${student.name}</span>
+                        </span>
+                        <button onclick="openEditModal(${student.index})" class="text-blue-600 hover:text-blue-800 font-medium">
+                            ✏️ تعديل
+                        </button>
+                    `;
+                    studentsDiv.appendChild(studentDiv);
+                });
+                
+                groupDiv.appendChild(studentsDiv);
+                container.appendChild(groupDiv);
+            });
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === 'qfvlu10178') {
+                isAdmin = true;
+                document.getElementById('adminLogin').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else {
+                alert('الرمز السري غير صحيح');
+            }
+        }
+
+        function openEditModal(index) {
+            currentEditIndex = index;
+            const student = students[index];
+            
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
+            
+            if (isAdmin || !student.password) {
+                // Skip password prompt for admin or students without password
+                document.getElementById('passwordPrompt').classList.add('hidden');
+                document.getElementById('editForm').classList.remove('hidden');
+                
+                document.getElementById('editName').value = student.name;
+                document.getElementById('editGroup').value = student.group;
+                document.getElementById('editSubgroup').value = student.subgroup;
+            } else {
+                // Show password prompt
+                document.getElementById('passwordPrompt').classList.remove('hidden');
+                document.getElementById('editForm').classList.add('hidden');
+                document.getElementById('editPassword').value = '';
+            }
+        }
+
+        function checkEditPassword() {
+            const password = document.getElementById('editPassword').value;
+            const student = students[currentEditIndex];
+            
+            if (password === student.password) {
+                document.getElementById('passwordPrompt').classList.add('hidden');
+                document.getElementById('editForm').classList.remove('hidden');
+                
+                document.getElementById('editName').value = student.name;
+                document.getElementById('editGroup').value = student.group;
+                document.getElementById('editSubgroup').value = student.subgroup;
+            } else {
+                alert('الرمز السري غير صحيح');
+            }
+        }
+
+        function saveEdit() {
+            const name = document.getElementById('editName').value.trim();
+            const group = document.getElementById('editGroup').value;
+            const subgroup = document.getElementById('editSubgroup').value;
+            
+            if (!name || !group || !subgroup) {
+                alert('يرجى ملء جميع الحقول');
+                return;
+            }
+            
+            // Check if new subgroup is full (excluding current student)
+            const currentCount = students.filter((s, i) => 
+                s.group === group && s.subgroup === subgroup && i !== currentEditIndex
+            ).length;
+            
+            if (currentCount >= 10) {
+                alert('هذه المجموعة الفرعية ممتلئة');
+                return;
+            }
+            
+            const updatedStudent = {
+                ...students[currentEditIndex],
+                name: name,
+                group: group,
+                subgroup: subgroup
+            };
+            
+            updateStudentInFirebase(currentEditIndex, updatedStudent).then(() => {
+                closeEditModal();
+            }).catch((error) => {
+                console.error('Error updating student:', error);
+                alert('حدث خطأ في تحديث البيانات');
+            });
+        }
+
+        function deleteStudent() {
+            if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+                deleteStudentFromFirebase(currentEditIndex).then(() => {
+                    closeEditModal();
+                }).catch((error) => {
+                    console.error('Error deleting student:', error);
+                    alert('حدث خطأ في حذف البيانات');
+                });
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('editModal').classList.remove('flex');
+            currentEditIndex = -1;
+        }
+
+        function exportData() {
+            if (students.length === 0) {
+                alert('لا توجد بيانات للتصدير');
+                return;
+            }
+            
+            const ws = XLSX.utils.json_to_sheet(students.map(s => ({
+                'الاسم': s.name,
+                'المجموعة': s.group,
+                'المجموعة الفرعية': `Subgroup ${s.subgroup}`,
+                'يحتوي على رمز سري': s.password ? 'نعم' : 'لا'
+            })));
+            
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'طلاب المرحلة الرابعة');
+            
+            XLSX.writeFile(wb, 'students_data.xlsx');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    // Clear existing data first
+                    const studentsRef = window.firebaseDB.ref(window.firebaseDB.database, 'students');
+                    window.firebaseDB.set(studentsRef, null).then(() => {
+                        // Convert imported data to our format and save to Firebase
+                        const promises = jsonData.map((row) => {
+                            const student = {
+                                name: row['الاسم'] || row['Name'] || '',
+                                password: '',
+                                group: row['المجموعة'] || row['Group'] || 'Medicine 1',
+                                subgroup: row['المجموعة الفرعية'] ? row['المجموعة الفرعية'].replace('Subgroup ', '') : '1',
+                                timestamp: Date.now()
+                            };
+                            return saveStudentToFirebase(student);
+                        });
+                        
+                        Promise.all(promises).then(() => {
+                            alert('تم استيراد البيانات بنجاح');
+                        }).catch((error) => {
+                            console.error('Error importing data:', error);
+                            alert('خطأ في استيراد البيانات');
+                        });
+                    });
+                } catch (error) {
+                    console.error('Error reading file:', error);
+                    alert('خطأ في قراءة الملف');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'986ccf6807983422',t:'MTc1OTE2Mjg1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
